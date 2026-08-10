@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <utility>
 
 class CopyTracer
 {
@@ -24,6 +25,12 @@ public:
 		return *this;
 	}
 
+	CopyTracer(CopyTracer&& other) noexcept
+		: Name{std::move(other.Name)}
+	{
+		std::cout << "Move constructed: " << Name << '\n';
+	}
+
 	~CopyTracer()
 	{
 		std::cout << "Destroyed: " << Name << '\n';
@@ -37,6 +44,16 @@ public:
 private:
 	std::string Name;
 };
+
+void TestMoveSemantics()
+{
+	CopyTracer source{"Move Source"};
+	CopyTracer moved{std::move(source)};
+
+	std::cout
+		<< "Moved-to value: " << moved.GetName() << '\n'
+		<< "Moved-from value: " << source.GetName() << '\n';
+}
 
 int main()
 {
@@ -55,4 +72,6 @@ int main()
 		<< "Target address unchanged: " << (targetAddress == &target) << '\n'
 		<< "operator= returned target: " << (&assignmentResult == &target) << '\n'
 		<< "Assigned value matches: " << (target.GetName() == original.GetName()) << '\n';
+
+	TestMoveSemantics();
 }
