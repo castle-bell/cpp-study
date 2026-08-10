@@ -12,7 +12,7 @@ public:
 		bool alive)
 		: Name{name},
 		Level{level},
-		HP{ hp },
+		HP{hp},
 		Attack{attack},
 		Alive{alive}
 	{
@@ -47,9 +47,19 @@ Player CreatePlayer(const std::string& name, int level)
 	);
 }
 
+void TakeDamage(int& hp, int damage)
+{
+	hp -= damage;
+
+	if (hp < 0)
+	{
+		hp = 0;
+	}
+}
+
 int main()
 {
-	std::cout << "Hello, C++!" << std::endl;
+	std::cout << "Hello, C++!\n";
 
 	std::string name;
 	int level{};
@@ -62,6 +72,10 @@ int main()
 
 	Player player = CreatePlayer(name, level);
 	player.Print();
+
+	int currentHp{100};
+	TakeDamage(currentHp, 30);
+	std::cout << "Remaining HP: " << currentHp << '\n';
 
 	return 0;
 }
