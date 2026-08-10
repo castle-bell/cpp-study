@@ -1,0 +1,19 @@
+# Visual Studio user data and caches
+.vs/
+*.suo
+*.user
+*.VC.db
+*.VC.opendb
+ipch/
+
+# C++ build output
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+Win32/
+*.obj
+*.pdb
+*.ilk
+*.exe
+*.tlog
