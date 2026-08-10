@@ -25,6 +25,14 @@ public:
 		return *this;
 	}
 
+	CopyTracer& operator=(CopyTracer&& other) noexcept
+	{
+		Name = std::move(other.Name);
+		std::cout << "Move assigned: " << Name << '\n';
+
+		return *this;
+	}
+
 	CopyTracer(CopyTracer&& other) noexcept
 		: Name{std::move(other.Name)}
 	{
@@ -55,6 +63,21 @@ void TestMoveSemantics()
 		<< "Moved-from value: " << source.GetName() << '\n';
 }
 
+void TestMoveAssignment()
+{
+	CopyTracer target{"Target"};
+	CopyTracer source{"Source"};
+
+	const CopyTracer* targetAddress = &target;
+	CopyTracer& result = (target = std::move(source));
+
+	std::cout << std::boolalpha
+		<< "Target address unchanged: " << (targetAddress == &target) << '\n'
+		<< "operator= returned target: " << (&result == &target) << '\n'
+		<< "Moved value: " << target.GetName() << '\n'
+		<< "Moved-from value: " << source.GetName() << '\n';
+}
+
 int main()
 {
 	CopyTracer original{"Original"};
@@ -74,4 +97,5 @@ int main()
 		<< "Assigned value matches: " << (target.GetName() == original.GetName()) << '\n';
 
 	TestMoveSemantics();
+	TestMoveAssignment();
 }
