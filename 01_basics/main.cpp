@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 class Player
 {
@@ -57,6 +58,23 @@ void TakeDamage(int& hp, int damage)
 	}
 }
 
+void TestVector()
+{
+	std::vector<int> monsterHps{ 100, 80, 120, 50 };
+	std::cout << "Count of Monsters: " << monsterHps.size() << "\n"
+		<< "Hp of Second Monster: " << monsterHps[1] << "\n";
+}
+
+void TestForLoop()
+{
+	const std::vector<int> monsterHps{ 100, 80, 120, 50 };
+
+	for (const int monsterHp : monsterHps)
+	{
+		std::cout << "Monster HP: " << monsterHp << '\n';
+	}
+}
+
 int main()
 {
 	std::cout << "Hello, C++!\n";
@@ -76,6 +94,9 @@ int main()
 	int currentHp{100};
 	TakeDamage(currentHp, 30);
 	std::cout << "Remaining HP: " << currentHp << '\n';
+
+	TestVector();
+	TestForLoop();
 
 	return 0;
 }
