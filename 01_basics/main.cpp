@@ -20,14 +20,12 @@ public:
 
 	void Print() const
 	{
-		std::string boolStr = Alive ? "true" : "false";
-
 		std::cout
 			<< "Name: " << Name << '\n'
 			<< "Level: " << Level << '\n'
 			<< "HP: " << HP << '\n'
 			<< "Attack: " << Attack << '\n'
-			<< "Alive: " << boolStr << '\n';
+			<< "Alive: " << std::boolalpha << Alive << '\n';
 	}
 
 private:
