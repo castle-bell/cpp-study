@@ -5,17 +5,17 @@ class Player
 {
 public:
 	Player(
-		std::string name,
+		const std::string& name,
 		int level,
 		int hp,
 		float attack,
 		bool alive)
+		: Name{name},
+		Level{level},
+		HP{ hp },
+		Attack{attack},
+		Alive{alive}
 	{
-		Name = name;
-		Level = level;
-		HP = hp;
-		Attack = attack;
-		Alive = alive;
 	}
 
 	void Print() const
