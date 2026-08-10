@@ -36,23 +36,29 @@ private:
 	bool Alive;
 };
 
-void PrintPlayer()
+Player CreatePlayer(const std::string& name, int level)
 {
-	Player player1{
-		"Player",
-		10,
+	return Player(
+		name,
+		level,
 		100,
 		25.5f,
 		true
-	};
-
-	player1.Print();
+	);
 }
-
 
 int main()
 {
 	std::cout << "Hello, C++!" << std::endl;
-	PrintPlayer();
+
+	std::string name;
+	int level;
+
+	std::cin >> name;
+	std::cin >> level;
+
+	Player player = CreatePlayer(name, level);
+	player.Print();
+
 	return 0;
 }
