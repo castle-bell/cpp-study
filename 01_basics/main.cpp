@@ -52,10 +52,13 @@ int main()
 	std::cout << "Hello, C++!" << std::endl;
 
 	std::string name;
-	int level;
+	int level{};
 
-	std::cin >> name;
-	std::cin >> level;
+	if (!(std::cin >> name >> level))
+	{
+		std::cerr << "Invalid input\n";
+		return 1;
+	}
 
 	Player player = CreatePlayer(name, level);
 	player.Print();
