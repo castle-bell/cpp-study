@@ -20,6 +20,12 @@ ScopedFile::ScopedFile(const char* path)
 	std::cout << "File opened\n";
 }
 
+ScopedFile::ScopedFile(ScopedFile&& other) noexcept
+	: File{other.File}
+{
+	other.File = nullptr;
+}
+
 ScopedFile::~ScopedFile()
 {
 	if (File != nullptr)

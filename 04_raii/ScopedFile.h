@@ -14,6 +14,8 @@ public:
     ScopedFile(const ScopedFile&) = delete;
     ScopedFile& operator=(const ScopedFile&) = delete;
 
+    ScopedFile(ScopedFile&&) noexcept;
+
 private:
     std::FILE* File{};
 };

@@ -1,6 +1,8 @@
 #include "ScopedFile.h"
 
+#include <cassert>
 #include <iostream>
+#include <utility>
 
 void WriteReport(const char* path, bool stopEarly)
 {
@@ -26,6 +28,17 @@ void TestEarlyReturn()
 	WriteReport("complete_report.txt", false);
 }
 
+void TestMoveSemantics(const char* path)
+{
+	ScopedFile file{path};
+	ScopedFile movedFile{std::move(file)};
+
+	assert(!file.IsOpen());
+	assert(movedFile.IsOpen());
+
+	movedFile.Write("File test with moved file\n");
+}
+
 int main()
 {
 	{
@@ -42,4 +55,5 @@ int main()
 	std::cout << "Inner scope ended\n";
 
 	TestEarlyReturn();
+	TestMoveSemantics("raii_test.txt");
 }
