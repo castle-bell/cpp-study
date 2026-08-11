@@ -19,6 +19,22 @@ public:
         }
     }
 
+    IntBuffer& operator=(const IntBuffer& other)
+    {
+        int* newData = new int[other.Size];
+        for (std::size_t i = 0; i < other.Size; ++i)
+        {
+            newData[i] = other.Data[i];
+        }
+
+        delete[] Data;
+
+        Size = other.Size;
+        Data = newData;
+
+        return *this;
+    }
+
     ~IntBuffer()
     {
         delete[] Data;
