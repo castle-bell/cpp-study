@@ -50,6 +50,15 @@ namespace phase2::data_model
 		}
 	}
 
+	[[nodiscard]] bool TryApplyDamage(FCharacterData* target, float damage)
+	{
+		if (target == nullptr)
+			return false;
+
+		ApplyDamage(*target, damage);
+		return true;
+	}
+
 	void Run()
 	{
 		std::cout << "01_data_model is ready.\n";
@@ -67,8 +76,18 @@ namespace phase2::data_model
 		PrintCharacter(newCharacter);
 		PrintCharacter(knight);
 
-		ApplyDamage(knight, 200.0f);
+		if (TryApplyDamage(&newCharacter, 20.0f))
+		{
+			PrintCharacter(newCharacter);
+		}
 
+		FCharacterData* missingTarget{ nullptr };
+		if (!TryApplyDamage(missingTarget, 20.0f))
+		{
+			std::cout << "No target to damage.\n\n";
+		}
+
+		ApplyDamage(knight, 200.0f);
 		PrintCharacter(knight);
 	}
 }
