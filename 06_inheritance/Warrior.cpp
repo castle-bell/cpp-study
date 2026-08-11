@@ -31,3 +31,11 @@ void Warrior::PrintStatus() const
 		<< Strength
 		<< '\n';
 }
+
+void Warrior::Attack() const
+{
+	std::cout
+		<< "Warrior Attacks with strength: "
+		<< Strength
+		<< '\n';
+}

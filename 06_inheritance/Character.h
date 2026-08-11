@@ -6,7 +6,9 @@ class Character
 {
 public:
     explicit Character(std::string name);
-    ~Character();
+    virtual ~Character();
+
+    virtual void Attack() const;
 
 protected:
     std::string Name;

@@ -16,3 +16,9 @@ Character::~Character()
 		<< Name
 		<< " Destroyed\n";
 }
+
+void Character::Attack() const
+{
+	std::cout
+		<< "Character Attacked";
+}

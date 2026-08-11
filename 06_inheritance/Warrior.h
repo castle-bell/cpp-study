@@ -11,6 +11,8 @@ public:
 
 	void PrintStatus() const;
 
+	void Attack() const override;
+
 private:
 	int Strength;
 };
