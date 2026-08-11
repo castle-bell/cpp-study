@@ -134,11 +134,13 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="lessons\01_data_model\DataModelLesson.cpp" />
+    <ClCompile Include="lessons\02_ownership\OwnershipLesson.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lessons\01_data_model\DataModelLesson.h" />
     <ClInclude Include="lessons\01_data_model\ECharacterState.h" />
     <ClInclude Include="lessons\01_data_model\FCharacterData.h" />
+    <ClInclude Include="lessons\02_ownership\OwnershipLesson.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

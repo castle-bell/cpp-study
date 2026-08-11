@@ -19,6 +19,12 @@
     <Filter Include="헤더 파일\lessons\01_data_model">
       <UniqueIdentifier>{41912E7B-11F0-41BE-960A-4F2EE3F8E936}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\lessons\02_ownership">
+      <UniqueIdentifier>{E926D0CF-1025-4C2B-8E21-6C7348F055E9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\lessons\02_ownership">
+      <UniqueIdentifier>{C49C8B48-34B3-44C8-807F-44A991C4B5E7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -26,6 +32,9 @@
     </ClCompile>
     <ClCompile Include="lessons\01_data_model\DataModelLesson.cpp">
       <Filter>소스 파일\lessons\01_data_model</Filter>
+    </ClCompile>
+    <ClCompile Include="lessons\02_ownership\OwnershipLesson.cpp">
+      <Filter>소스 파일\lessons\02_ownership</Filter>
     </ClCompile>
     <ClInclude Include="lessons\01_data_model\DataModelLesson.h">
       <Filter>헤더 파일\lessons\01_data_model</Filter>
@@ -35,6 +44,9 @@
     </ClInclude>
     <ClInclude Include="lessons\01_data_model\FCharacterData.h">
       <Filter>헤더 파일\lessons\01_data_model</Filter>
+    </ClInclude>
+    <ClInclude Include="lessons\02_ownership\OwnershipLesson.h">
+      <Filter>헤더 파일\lessons\02_ownership</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
