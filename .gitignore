@@ -17,3 +17,8 @@ Win32/
 *.ilk
 *.exe
 *.tlog
+
+# Study runtime output
+raii_test.txt
+early_report.txt
+complete_report.txt
