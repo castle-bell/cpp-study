@@ -104,6 +104,49 @@ Rule of Five의 다섯 함수:
 
 이동을 반드시 지원해야 하는 것은 아니다. 클래스 의도에 따라 복사나 이동을 `= delete`로 금지할 수도 있다. 중요한 것은 컴파일러의 멤버별 얕은 복사와 자동 생성 규칙에 무심하게 의존하지 않고, 클래스의 소유권 의도를 명확하게 만드는 것이다.
 
+## special member function 자동 생성과 fallback
+
+Rule of Three/Five는 자원 관리를 위한 **설계 지침**이고, 자동 생성·삭제는 **C++ 언어 규칙**이다. “나머지도 직접 함수 본문을 작성해야 한다”로 혼동하면 안 된다. `= default`로 기본 동작을 선택하거나 `= delete`로 금지하는 것도 명시적인 설계다.
+
+`user-declared`는 함수 본문을 직접 작성한 경우만 뜻하지 않는다. 클래스 정의에 `= default` 또는 `= delete`로 적은 함수도 user-declared다.
+
+핵심 규칙을 단순화하면 다음과 같다.
+
+| 상황 | 복사 | 이동 |
+| --- | --- | --- |
+| 관련 함수를 아무것도 선언하지 않음 | 멤버가 지원하면 자동 생성 | 멤버가 지원하면 자동 생성 |
+| 소멸자, 복사 생성자, 복사 대입 중 하나를 선언 | 나머지 복사 함수가 암시적으로 생성될 수 있음 | 암시적 이동 생성·대입은 생성되지 않음 |
+| 이동 생성자나 이동 대입을 선언 | 암시적 복사 생성·대입은 deleted 처리 | 직접 선언한 이동 함수만 존재하며, 나머지 이동 함수가 자동 생성되는 것은 아님 |
+
+단, 컴파일러가 함수를 생성하려고 해도 멤버 중 하나가 해당 연산을 지원하지 않으면 그 함수는 deleted 처리될 수 있다.
+
+### 이동이 복사로 fallback되는 경우
+
+```cpp
+class PlayerInventory
+{
+public:
+    ~PlayerInventory() = default;
+
+private:
+    std::string Owner;
+    std::vector<int> Items;
+};
+
+PlayerInventory first;
+PlayerInventory second{std::move(first)};
+```
+
+사용자가 소멸자를 선언했으므로 이동 생성자는 암시적으로 생성되지 않는다. 그러나 암시적 복사 생성자의 `const PlayerInventory&`는 rvalue도 받을 수 있으므로, 이 코드는 컴파일되며 실제로는 복사한다. `std::move`는 이동을 강제하지 않고 이동 후보가 선택될 수 있도록 value category만 바꾼다.
+
+이 fallback은 이동 개념이 없던 C++11 이전의 복사 중심 코드와의 호환성을 유지하는 데 도움이 된다.
+
+### 에러가 발생하는 시점
+
+- `= delete`된 복사·이동을 사용하면 **compile error**다.
+- 함수를 선언만 하고 정의하지 않은 채 사용하면 일반적으로 **linker error**다.
+- 잘못 구현한 자원 관리 코드의 double delete, dangling pointer 등은 컴파일을 통과한 뒤 **runtime undefined behavior**로 드러날 수 있다.
+
 ## 결론
 
 - 실습에서는 raw pointer의 소유권을 직접 관리해 Rule of Three/Five가 필요한 이유를 확인했다.
