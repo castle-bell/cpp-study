@@ -137,6 +137,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lessons\01_data_model\DataModelLesson.h" />
+    <ClInclude Include="lessons\01_data_model\ECharacterState.h" />
+    <ClInclude Include="lessons\01_data_model\FCharacterData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
