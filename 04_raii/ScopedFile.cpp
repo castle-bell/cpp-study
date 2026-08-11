@@ -38,7 +38,7 @@ void ScopedFile::Write(const char* text)
 	}
 }
 
-bool ScopedFile::IsOpen() const
+bool ScopedFile::IsOpen() const noexcept
 {
 	return File != nullptr;
 }
