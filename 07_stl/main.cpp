@@ -1,6 +1,8 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <string>
+#include <unordered_map>
 
 void UseStlMethod()
 {
@@ -23,8 +25,50 @@ void UseStlMethod()
 	}
 }
 
+void RemoveDeadMonsters()
+{
+	auto monsterHPs = std::vector<int>{100, 0, 80, 0, 120};
+	const auto removedCount = std::erase(monsterHPs, 0);
+
+	std::cout << "Removed: " << removedCount << '\n';
+
+	for (int hp : monsterHPs)
+	{
+		std::cout << "HP: " << hp << '\n';
+	}
+}
+
+void FindMonsterByName()
+{
+	auto monsterHPs = std::unordered_map<std::string, int>{
+		{"Slime", 100},
+		{"Orc", 250},
+		{"Goblin", 80}
+	};
+
+	const auto found = monsterHPs.find("Orc");
+
+	if (found != monsterHPs.end())
+	{
+		std::cout
+			<< "Orc HP is "
+			<< found->second
+			<< '\n';
+	}
+
+	else
+	{
+		std::cout
+			<< "Not Found";
+	}
+
+
+}
+
 int main()
 {
 	UseStlMethod();
+	RemoveDeadMonsters();
+	FindMonsterByName();
 	return 0;
 }
