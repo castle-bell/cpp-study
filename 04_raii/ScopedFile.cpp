@@ -26,6 +26,25 @@ ScopedFile::ScopedFile(ScopedFile&& other) noexcept
 	other.File = nullptr;
 }
 
+ScopedFile& ScopedFile::operator=(ScopedFile&& other) noexcept
+{
+	if (this == &other)
+	{
+		return *this;
+	}
+
+	if (File != nullptr)
+	{
+		std::fclose(File);
+		std::cout << "File closed\n";
+	}
+
+	File = other.File;
+	other.File = nullptr;
+
+	return *this;
+}
+
 ScopedFile::~ScopedFile()
 {
 	if (File != nullptr)

@@ -39,6 +39,19 @@ void TestMoveSemantics(const char* path)
 	movedFile.Write("File test with moved file\n");
 }
 
+void TestMoveAssignment()
+{
+	ScopedFile first{"first.txt"};
+	ScopedFile second{"second.txt"};
+
+	second = std::move(first);
+
+	assert(!first.IsOpen());
+	assert(second.IsOpen());
+
+	second.Write("File test with move assignment\n");
+}
+
 int main()
 {
 	{
@@ -56,4 +69,5 @@ int main()
 
 	TestEarlyReturn();
 	TestMoveSemantics("raii_test.txt");
+	TestMoveAssignment();
 }
