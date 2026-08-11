@@ -127,8 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="RuleOfThree.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RuleOfFive.cpp" />
+    <ClCompile Include="RuleOfThree.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RuleOfFive.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,209 +1,111 @@
 # 03. Copy and Move
 
-C++ 객체의 복사와 이동이 언제 호출되는지, 객체의 identity와 소유 자원이 어떻게 달라지는지 정리한 학습 기록이다.
+C++ 객체의 복사·이동과 자원 소유권을 실습한 기록이다.
 
-## 1. 복사 생성과 복사 대입
-
-### 질문
-
-다음 두 코드는 모두 `=`를 사용한다. 같은 동작일까?
+## 복사 생성과 복사 대입
 
 ```cpp
-CopyTracer copied = original;
-copied = original;
+IntBuffer copied{original}; // 복사 생성
+
+IntBuffer target{5};
+target = original;          // 복사 대입
 ```
 
-### 정리
+- 복사 생성은 새 객체를 만들며 원본의 값을 복사한다.
+- 복사 대입은 이미 존재하는 target의 상태를 바꾼다.
+- 대입 후에도 target 객체 자체의 주소와 identity는 그대로다.
+- `operator=`는 연쇄 대입을 지원하도록 일반적으로 `*this`를 참조로 반환한다.
 
-첫 번째 코드는 새 객체를 만드는 복사 생성이고, 두 번째 코드는 이미 존재하는 객체의 값을 바꾸는 복사 대입이다.
+raw pointer가 동적 배열을 소유하는 경우 포인터 값만 복사하면 두 객체가 같은 배열을 가리킨다. 그러면 한쪽이 자원을 삭제했을 때 다른 포인터가 dangling pointer가 되고, 두 소멸자가 같은 자원을 삭제하면 double delete가 발생한다. 따라서 서로 다른 배열을 갖도록 깊은 복사가 필요하다.
 
-```text
-CopyTracer copied = original; -> 복사 생성자
-copied = original;            -> 복사 대입 연산자
-```
+## 복사 대입과 예외 안전성
 
-복사 대입 후에도 왼쪽 객체의 identity와 주소는 유지되고 내부 값만 바뀐다.
+기존 자원을 먼저 삭제한 뒤 `new`를 하면, 메모리 할당 실패 시 target이 깨진 상태로 남을 수 있다.
+
+안전한 순서는 다음과 같다.
+
+1. 새 자원을 준비한다.
+2. 새 자원에 원본 내용을 복사한다.
+3. 준비가 모두 성공한 후 target의 기존 자원을 정리한다.
+4. target이 새 자원을 소유하게 한다.
+
+`IntBuffer`의 원소는 `int`이므로 원소 대입은 예외를 던지지 않지만, `new` 자체는 실패할 수 있다.
+
+## lvalue, rvalue, std::move
+
+- lvalue와 rvalue는 C++ 언어가 실제로 구분하는 expression value category다.
+- `T&`는 lvalue reference이다.
+- `const T&`는 lvalue와 rvalue 둘 다 받을 수 있다.
+- `T&&`는 rvalue reference이다.
+- 이름이 있는 rvalue reference 변수는 표현식으로 사용하면 lvalue다.
+- `std::move` 자체가 자원을 옮기는 것은 아니다. 대상을 이동 가능한 value category로 변환하는 cast에 가깝다.
+- 실제 소유권 이전은 이동 생성자나 이동 대입 연산자가 수행한다.
+
+## 이동 생성과 이동 대입
 
 ```cpp
-CopyTracer& operator=(const CopyTracer& other)
+IntBuffer moved{std::move(source)}; // 이동 생성
+target = std::move(source);         // 이동 대입
+```
+
+이동 생성자의 target은 아직 자원을 소유하지 않는 새 객체다. source의 크기와 포인터를 가져온 뒤 source를 `0`, `nullptr` 상태로 만들면 된다.
+
+이동 대입의 target은 이미 자원을 소유할 수 있으므로 기존 자원도 정리해야 한다. 자기 이동 대입인 `buffer = std::move(buffer)`도 유효한 상태로 남도록 처리했다.
+
+이동된 source는 파괴하거나 새 값을 대입할 수 있는 valid but unspecified state에 남아야 한다. 특정한 값을 가정하면 안 된다.
+
+## noexcept
+
+`noexcept`는 예외가 없을 때만 함수를 실행한다는 뜻이 아니다. 함수 밖으로 예외와 같은 비정상 탈출이 발생하지 않는다고 약속하는 것이다. 약속을 어겨 예외가 빠져나오면 `std::terminate` 종료 로직이 실행될 수 있다.
+
+`IntBuffer`의 이동은 크기와 포인터만 대입하며 새로운 할당이 없으므로 `noexcept`가 적절하다. `std::vector`와 같은 표준 컨테이너는 재할당 중 안전성을 유지하기 위해 `noexcept` 이동을 선호할 수 있다.
+
+## Rule of Zero, Three, Five
+
+이 세 규칙은 컴파일러가 강제하는 문법 규칙이 아니라, special member function과 자원 소유권을 안전하게 설계하기 위한 지침이다.
+
+### 내가 이해한 Rule of Zero
+
+> 이미 소유권과 자원 정리가 잘 정의된 라이브러리 클래스만 멤버로 사용한다면 special member function을 직접 구현하지 않는 것이 좋다.
+
+```cpp
+class IntBuffer
 {
-    Name = other.Name;
-    return *this;
-}
+private:
+    std::vector<int> Data;
+};
 ```
 
-`return *this`는 대입의 왼쪽 객체를 참조로 반환한다. 덕분에 `first = second = third`와 같은 연쇄 대입이 가능하다.
+`std::vector` 자체가 소멸·복사·이동을 올바르게 구현하므로 `IntBuffer`는 그 동작을 조합해 사용하면 된다. 현대 C++에서 가장 선호하는 방식이다.
 
-## 2. 컴파일러가 만드는 기본 복사 연산
+### 내가 이해한 Rule of Three
 
-복사 생성자나 복사 대입 연산자를 직접 구현하지 않아도 조건이 맞으면 컴파일러가 멤버별 복사를 제공한다.
+> raw pointer 등을 통해 자원을 직접 소유해 소멸자에서 정리해야 한다면, 복사 생성자와 복사 대입 연산자도 함께 올바르게 구현해야 자원 관리 문제가 없다.
 
-```cpp
-CopyTracer(const CopyTracer&) = default;
-CopyTracer& operator=(const CopyTracer&) = default;
-```
+핵심은 “소멸자를 작성했다” 자체보다, 소멸자가 필요할 정도의 자원 소유 책임을 클래스가 갖고 있다는 점이다.
 
-복사를 금지하려면 명시적으로 삭제한다.
+Rule of Three의 세 함수:
 
-```cpp
-CopyTracer(const CopyTracer&) = delete;
-CopyTracer& operator=(const CopyTracer&) = delete;
-```
+1. 소멸자
+2. 복사 생성자
+3. 복사 대입 연산자
 
-`std::string`과 `std::vector`처럼 자원을 스스로 관리하는 멤버만 있다면 특별 멤버 함수를 직접 작성하지 않는 Rule of Zero가 가장 자연스럽다.
+### 내가 이해한 Rule of Five
 
-## 3. lvalue와 rvalue
+> 자원 소유 클래스가 이동까지 지원해야 한다면 이동 생성자와 이동 대입 연산자도 추가로 구현한다.
 
-### 질문
+Rule of Five의 다섯 함수:
 
-lvalue와 rvalue는 설명을 위한 용어인가, 컴파일러가 실제로 구분하는 언어 개념인가?
+1. 소멸자
+2. 복사 생성자
+3. 복사 대입 연산자
+4. 이동 생성자
+5. 이동 대입 연산자
 
-### 정리
+이동을 반드시 지원해야 하는 것은 아니다. 클래스 의도에 따라 복사나 이동을 `= delete`로 금지할 수도 있다. 중요한 것은 컴파일러의 멤버별 억은 복사와 자동 생성 규칙에 무심하게 의존하지 않고, 클래스의 소유권 의도를 명확하게 만드는 것이다.
 
-lvalue와 rvalue는 C++ 언어에 정의된 표현식의 value category다. 컴파일러는 타입과 value category를 이용해 참조 바인딩과 overload resolution을 수행한다.
+## 결론
 
-```cpp
-CopyTracer tracer{"Tracer"};
-
-tracer;            // lvalue
-std::move(tracer); // xvalue, rvalue
-```
-
-```text
-T&       -> lvalue reference
-const T& -> lvalue와 rvalue 모두 받을 수 있음
-T&&      -> rvalue reference
-```
-
-비템플릿 코드에서 `CopyTracer&&`는 rvalue만 받는 rvalue reference다. `&&`는 참조의 참조가 아니라 별도의 언어 문법이다.
-
-## 4. std::move의 의미
-
-`std::move`는 객체를 직접 이동시키지 않는다. lvalue 표현식을 이동 가능한 rvalue로 변환한다.
-
-```cpp
-CopyTracer moved{std::move(source)};
-```
-
-실제 자원 이동은 선택된 이동 생성자 또는 이동 대입 연산자가 수행한다.
-
-이동 함수의 매개변수 `other`는 타입이 `T&&`여도 이름을 가진 표현식이므로 함수 내부에서는 lvalue다. 따라서 멤버를 이동할 때 다시 `std::move`가 필요하다.
-
-```cpp
-CopyTracer(CopyTracer&& other) noexcept
-    : Name{std::move(other.Name)}
-{
-}
-```
-
-## 5. 이동 생성과 이동 대입
-
-```text
-T moved{std::move(source)}; -> 새 객체 생성, 이동 생성자
-target = std::move(source); -> 기존 객체 변경, 이동 대입 연산자
-```
-
-이동 생성자는 아직 존재하지 않는 멤버를 생성하므로 멤버 초기화 목록을 사용한다.
-
-```cpp
-CopyTracer(CopyTracer&& other) noexcept
-    : Name{std::move(other.Name)}
-{
-}
-```
-
-이동 대입 시에는 대상 멤버가 이미 존재하므로 함수 본문에서 대입한다.
-
-```cpp
-CopyTracer& operator=(CopyTracer&& other) noexcept
-{
-    Name = std::move(other.Name);
-    return *this;
-}
-```
-
-## 6. 이동 대입과 기존 target 자원
-
-### 질문
-
-`target.Name`이 이미 heap 자원을 소유하고 있는데 `source.Name`의 자원을 이동 대입하면 기존 target 자원은 누수되지 않는가?
-
-### 처음 이해한 위험
-
-```text
-target.Name -> heap A
-source.Name -> heap B
-```
-
-단순히 target이 heap B의 주소를 받으면 heap A의 주소를 잃어 메모리 누수가 발생할 수 있다고 생각했다.
-
-### 정리
-
-그 위험은 raw pointer를 단순 대입할 때 실제로 발생한다. 하지만 `std::string`의 이동 대입 연산자는 기존 target 자원을 먼저 해제하거나 재사용한 뒤 source의 자원을 넘겨받는다.
-
-```text
-이동 전
-target.Name -> heap A: "Target"
-source.Name -> heap B: "Source"
-
-이동 대입
-1. target.Name이 heap A를 정리하거나 재사용
-2. source.Name의 heap B 소유권을 target.Name으로 이전
-3. source.Name은 유효하지만 unspecified state
-
-이동 후
-target.Name -> heap B: "Source"
-source.Name -> 유효하지만 값은 미지정
-```
-
-이때 `target.Name`이라는 `std::string` 객체 자체의 소멸자가 호출되는 것은 아니다. 살아 있는 `std::string` 객체의 이동 대입 연산자가 내부 자원을 교체한다. `target`이 나중에 파괴될 때 `Name`의 소멸자가 한 번 호출된다.
-
-raw pointer는 자원 정리 책임을 제공하지 않는다.
-
-```cpp
-target.Data = other.Data; // 기존 target.Data가 소유한 자원을 잃을 수 있음
-```
-
-`std::string`, `std::vector`, `std::unique_ptr` 같은 RAII 타입은 이동 대입 과정에서 기존 자원을 안전하게 처리한다.
-
-## 7. 이동된 객체의 상태
-
-이동된 원본 객체는 파괴하거나 새 값을 대입할 수 있는 유효한 상태다. 다만 구체적인 값은 unspecified state다.
-
-```cpp
-CopyTracer moved{std::move(source)};
-
-// source는 파괴 가능하고 재대입 가능하다.
-// source.Name이 반드시 빈 문자열이라고 가정하면 안 된다.
-```
-
-현재 MSVC에서 빈 문자열로 보이더라도 구현 결과에 의존하지 않는다.
-
-## 8. noexcept 이동
-
-`noexcept`는 함수 실행 조건이 아니라 예외를 함수 밖으로 내보내지 않겠다는 약속이다.
-
-```cpp
-CopyTracer(CopyTracer&& other) noexcept;
-CopyTracer& operator=(CopyTracer&& other) noexcept;
-```
-
-`noexcept` 함수에서 예외가 밖으로 빠져나오면 `std::terminate()`가 호출된다.
-
-`std::vector` 같은 컨테이너는 재할당 중 상태를 안전하게 유지하기 위해 `noexcept` 이동을 선호한다. 이동이 예외를 던질 수 있고 복사가 가능하면 복사를 선택할 수 있다.
-
-## 핵심 요약
-
-```text
-복사 생성     -> 새 객체를 원본 값으로 생성
-복사 대입     -> 기존 객체의 주소를 유지하며 값을 복사
-이동 생성     -> 새 객체가 원본의 자원을 넘겨받음
-이동 대입     -> 기존 target 자원을 정리하고 원본 자원을 넘겨받음
-std::move     -> 이동 실행이 아니라 rvalue 변환
-이동된 원본   -> 유효하지만 값은 unspecified
-noexcept 이동 -> 컨테이너가 안전하게 이동을 선택할 근거
-RAII 멤버     -> 기존 자원 정리와 ownership 이전을 타입이 담당
-raw pointer   -> 이동처럼 대입해도 주소 복사일 뿐, 자동 자원 정리 없음
-```
-
-복사와 이동을 직접 구현하는 실습은 특별 멤버 함수의 호출 시점을 확인하기 위한 것이다. 실제 코드에서는 자원 관리 타입을 멤버로 사용하고 Rule of Zero를 우선한다.
+- 실습에서는 raw pointer의 소유권을 직접 관리해 Rule of Three/Five가 필요한 이유를 확인했다.
+- 실제 코드에서는 `std::vector`, `std::string`, `std::unique_ptr` 같은 RAII 타입을 멤버로 사용해 Rule of Zero를 선호한다.
+- 소유권을 직접 관리해야 한다면 복사·이동·파괴 전체를 하나의 설계로 바라봐야 한다.

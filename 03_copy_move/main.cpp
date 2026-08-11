@@ -1,3 +1,6 @@
+#include "RuleOfFive.h"
+
+#include <cassert>
 #include <iostream>
 #include <string>
 #include <utility>
@@ -78,6 +81,40 @@ void TestMoveAssignment()
 		<< "Moved-from value: " << source.GetName() << '\n';
 }
 
+void TestIntBufferRuleOfFive()
+{
+	using rule_of_five::IntBuffer;
+
+	IntBuffer source{3};
+	source.Set(0, 10);
+	source.Set(1, 20);
+	source.Set(2, 30);
+
+	IntBuffer moved{std::move(source)};
+	assert(source.GetSize() == 0);
+	assert(moved.Get(1) == 20);
+
+	IntBuffer target{1};
+	target = std::move(moved);
+	assert(moved.GetSize() == 0);
+	assert(target.GetSize() == 3);
+	assert(target.Get(2) == 30);
+
+	target = std::move(target);
+	assert(target.Get(0) == 10);
+
+	IntBuffer copied{target};
+	target.Set(0, 99);
+	assert(copied.Get(0) == 10);
+
+	IntBuffer assigned{1};
+	assigned = target;
+	target.Set(1, 99);
+	assert(assigned.Get(1) == 20);
+
+	std::cout << "Rule of Five tests passed\n";
+}
+
 int main()
 {
 	CopyTracer original{"Original"};
@@ -98,4 +135,5 @@ int main()
 
 	TestMoveSemantics();
 	TestMoveAssignment();
+	TestIntBufferRuleOfFive();
 }
