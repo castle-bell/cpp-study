@@ -31,6 +31,25 @@ namespace phase2::data_model
 			<< "State: " << ToString(data.State) << "\n\n";
 	}
 
+	void ApplyDamage(FCharacterData& character, float damage)
+	{
+		if (damage <= 0.0f)
+		{
+			return;
+		}
+
+		const float remainingHealth{ character.Health - damage };
+		if (remainingHealth <= 0.0f)
+		{
+			character.Health = 0.0f;
+			character.State = ECharacterState::Dead;
+		}
+		else
+		{
+			character.Health = remainingHealth;
+		}
+	}
+
 	void Run()
 	{
 		std::cout << "01_data_model is ready.\n";
@@ -46,6 +65,10 @@ namespace phase2::data_model
 		};
 
 		PrintCharacter(newCharacter);
+		PrintCharacter(knight);
+
+		ApplyDamage(knight, 200.0f);
+
 		PrintCharacter(knight);
 	}
 }
