@@ -135,6 +135,7 @@
     <ClCompile Include="lessons\02_ownership\Weapon.cpp" />
     <ClCompile Include="lessons\03_containers\ContainersLesson.cpp" />
     <ClCompile Include="lessons\04_callbacks\CallbacksLesson.cpp" />
+    <ClCompile Include="lessons\05_gameplay_framework\GameplayFrameworkLesson.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lessons\01_data_model\DataModelLesson.h" />
@@ -145,6 +146,8 @@
     <ClInclude Include="lessons\02_ownership\Weapon.h" />
     <ClInclude Include="lessons\03_containers\ContainersLesson.h" />
     <ClInclude Include="lessons\04_callbacks\CallbacksLesson.h" />
+    <ClInclude Include="lessons\04_callbacks\DamageEvent.h" />
+    <ClInclude Include="lessons\05_gameplay_framework\GameplayFrameworkLesson.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

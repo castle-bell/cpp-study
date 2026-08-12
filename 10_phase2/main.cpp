@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "lessons/04_callbacks/CallbacksLesson.h"
+#include "lessons/05_gameplay_framework/GameplayFrameworkLesson.h"
 
 int main()
 {
 	std::cout << "=== Phase 2: Unreal C++ Bridge ===\n\n";
 
-	phase2::callbacks::Run();
+	phase2::gameplay_framework::Run();
 }

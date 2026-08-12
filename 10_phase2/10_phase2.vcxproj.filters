@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\lessons\05_gameplay_framework">
+      <UniqueIdentifier>{1492A85E-32B5-4FE7-B0FF-B87EDDFE1E32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\lessons\05_gameplay_framework">
+      <UniqueIdentifier>{AEE84280-254C-4674-A16C-6B2E0DE89E66}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -39,6 +45,9 @@
     <ClCompile Include="lessons\04_callbacks\DamageEvent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="lessons\05_gameplay_framework\GameplayFrameworkLesson.cpp">
+      <Filter>소스 파일\lessons\05_gameplay_framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lessons\01_data_model\DataModelLesson.h">
@@ -64,6 +73,12 @@
     </ClInclude>
     <ClInclude Include="lessons\04_callbacks\CallbacksLesson.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="lessons\04_callbacks\DamageEvent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="lessons\05_gameplay_framework\GameplayFrameworkLesson.h">
+      <Filter>헤더 파일\lessons\05_gameplay_framework</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
