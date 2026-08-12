@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "lessons/02_ownership/OwnershipLesson.h"
+#include "lessons/04_callbacks/CallbacksLesson.h"
 
 int main()
 {
 	std::cout << "=== Phase 2: Unreal C++ Bridge ===\n\n";
 
-	phase2::ownership::Run();
+	phase2::callbacks::Run();
 }

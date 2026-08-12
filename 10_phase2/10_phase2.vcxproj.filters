@@ -13,54 +13,57 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="소스 파일\lessons\01_data_model">
-      <UniqueIdentifier>{8D57AFC0-858C-4160-A61B-9371D85BFF24}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\lessons\01_data_model">
-      <UniqueIdentifier>{41912E7B-11F0-41BE-960A-4F2EE3F8E936}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\lessons\02_ownership">
-      <UniqueIdentifier>{E926D0CF-1025-4C2B-8E21-6C7348F055E9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="헤더 파일\lessons\02_ownership">
-      <UniqueIdentifier>{C49C8B48-34B3-44C8-807F-44A991C4B5E7}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="lessons\02_ownership\Character.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="lessons\01_data_model\DataModelLesson.cpp">
-      <Filter>소스 파일\lessons\01_data_model</Filter>
+      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="lessons\02_ownership\OwnershipLesson.cpp">
-      <Filter>소스 파일\lessons\02_ownership</Filter>
-    </ClCompile>
-    <ClCompile Include="lessons\02_ownership\Character.cpp">
-      <Filter>소스 파일\lessons\02_ownership</Filter>
+      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="lessons\02_ownership\Weapon.cpp">
-      <Filter>소스 파일\lessons\02_ownership</Filter>
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="lessons\03_containers\ContainersLesson.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="lessons\04_callbacks\CallbacksLesson.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="lessons\04_callbacks\DamageEvent.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lessons\01_data_model\DataModelLesson.h">
-      <Filter>헤더 파일\lessons\01_data_model</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="lessons\01_data_model\ECharacterState.h">
-      <Filter>헤더 파일\lessons\01_data_model</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="lessons\01_data_model\FCharacterData.h">
-      <Filter>헤더 파일\lessons\01_data_model</Filter>
-    </ClInclude>
-    <ClInclude Include="lessons\02_ownership\OwnershipLesson.h">
-      <Filter>헤더 파일\lessons\02_ownership</Filter>
-    </ClInclude>
-    <ClInclude Include="lessons\02_ownership\Weapon.h">
-      <Filter>헤더 파일\lessons\02_ownership</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="lessons\02_ownership\Character.h">
-      <Filter>헤더 파일\lessons\02_ownership</Filter>
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="lessons\02_ownership\OwnershipLesson.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="lessons\02_ownership\Weapon.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="lessons\03_containers\ContainersLesson.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="lessons\04_callbacks\CallbacksLesson.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
