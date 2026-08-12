@@ -131,6 +131,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="lessons\01_data_model\DataModelLesson.cpp" />
     <ClCompile Include="lessons\02_ownership\OwnershipLesson.cpp" />
+    <ClCompile Include="lessons\02_ownership\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lessons\01_data_model\DataModelLesson.h" />

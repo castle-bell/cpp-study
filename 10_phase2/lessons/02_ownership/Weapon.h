@@ -6,6 +6,8 @@ namespace phase2::ownership
 {
 	struct Weapon
 	{
+		~Weapon();
+
 		std::string Name;
 		int AttackPower{};
 	};
