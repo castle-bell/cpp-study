@@ -36,6 +36,11 @@
     <ClCompile Include="lessons\02_ownership\OwnershipLesson.cpp">
       <Filter>소스 파일\lessons\02_ownership</Filter>
     </ClCompile>
+    <ClCompile Include="lessons\02_ownership\Character.cpp">
+      <Filter>소스 파일\lessons\02_ownership</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="lessons\01_data_model\DataModelLesson.h">
       <Filter>헤더 파일\lessons\01_data_model</Filter>
     </ClInclude>
@@ -46,6 +51,12 @@
       <Filter>헤더 파일\lessons\01_data_model</Filter>
     </ClInclude>
     <ClInclude Include="lessons\02_ownership\OwnershipLesson.h">
+      <Filter>헤더 파일\lessons\02_ownership</Filter>
+    </ClInclude>
+    <ClInclude Include="lessons\02_ownership\Weapon.h">
+      <Filter>헤더 파일\lessons\02_ownership</Filter>
+    </ClInclude>
+    <ClInclude Include="lessons\02_ownership\Character.h">
       <Filter>헤더 파일\lessons\02_ownership</Filter>
     </ClInclude>
   </ItemGroup>
